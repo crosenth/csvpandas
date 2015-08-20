@@ -92,6 +92,6 @@ And to publish to GitHub pages::
 license
 =======
 
-Copyright (c) 2012 Noah Hoffman
+Copyright (c) 2015 Chris Rosenthal
 
 Released under the `GPLv3 <http://www.gnu.org/copyleft/gpl.html>`_ License
