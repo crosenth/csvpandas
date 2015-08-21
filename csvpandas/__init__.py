@@ -1,17 +1,17 @@
-# This file is part of Bioy
+# This file is part of csvpandas
 #
-#    Bioy is free software: you can redistribute it and/or modify
+#    csvpandas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Bioy is distributed in the hope that it will be useful,
+#    csvpandas is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with Bioy.  If not, see <http://www.gnu.org/licenses/>.
+#    along with csvpandas.  If not, see <http://www.gnu.org/licenses/>.
 """
 Tools for microbial sequence analysis and classification.
 
@@ -31,13 +31,7 @@ log = logging.getLogger(__name__)
 
 _data = os.path.join(os.path.dirname(__file__), 'data')
 
-# version file is not required
-try:
-    with open(os.path.join(_data, 'version')) as v:
-        __version__ = v.read().strip()
-except Exception, e:
-    print e
-    __version__ = ''
+__version__ = utils.version()
 
 
 def main(argv=sys.argv[1:]):
@@ -101,7 +95,7 @@ def parse_args(parser):
     parser.add_argument('-l', '--log',
                         metavar='FILE',
                         default=sys.stdout,
-                        type=utils.Opener('a'),  # append
+                        type=utils.opener('a'),  # append
                         help='Send logging to a file')
 
     parser.add_argument('-v', '--verbose',
