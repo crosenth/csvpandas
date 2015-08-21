@@ -10,6 +10,7 @@ setup(author='Chris Rosenthal',
       version=utils.version(),
       url='https://github.com/crosenth/csvpandas',
       install_requires=['pandas>=0.16.2'],
+      license='GPLv3',
       classifiers=[
           'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
           'Development Status :: 1 - Planning'
