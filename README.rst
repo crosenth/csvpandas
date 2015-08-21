@@ -14,10 +14,9 @@ authors
 dependencies
 ============
 
-* A unix-like system; tested primarily on Ubuntu 12.04
 * Python 2.7.x
 * setuptools
-* Pandas 0.15.2
+* Pandas 0.16.2
 
 installation
 ============
@@ -48,7 +47,7 @@ versions
 We use abbrevited git sha hashes to identify the software version::
 
   % ./csvpandas --version
-  0128.9790c13
+  0.0.1
 
 The version information is saved in ``csvpandas/data`` when ``setup.py``
 is run (on installation, or even by executing ``python setup.py
