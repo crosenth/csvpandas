@@ -12,6 +12,7 @@ setup(author='Chris Rosenthal',
       install_requires=['pandas>=0.16.2'],
       license='GPLv3',
       classifers=[
-          'License :: OSI Approved :: GNU General Public License v3 (GPLv3)'
+          'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+          'Development Status :: 1 - Planning'
           ]
       )
