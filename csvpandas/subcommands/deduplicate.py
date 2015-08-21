@@ -1,17 +1,17 @@
-# This file is part of Bioy
+# This file is part of csvpandas
 #
-#    Bioy is free software: you can redistribute it and/or modify
+#    csvpandas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Bioy is distributed in the hope that it will be useful,
+#    csvpandas is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with Bioy.  If not, see <http://www.gnu.org/licenses/>.
+#    along with csvpandas.  If not, see <http://www.gnu.org/licenses/>.
 
 """Deduplicate any number of csv file with optional column group indexing.
 """
