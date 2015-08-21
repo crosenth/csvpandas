@@ -1,22 +1,26 @@
-# This file is part of Bioy
+# This file is part of csvpandas
 #
-#    Bioy is free software: you can redistribute it and/or modify
+#    csvpandas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Bioy is distributed in the hope that it will be useful,
+#    csvpandas is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with Bioy.  If not, see <http://www.gnu.org/licenses/>.
+#    along with csvpandas.  If not, see <http://www.gnu.org/licenses/>.
 
 import bz2
 import gzip
 import logging
+import os
 import pandas
+import pkg_resources
+import re
+import subprocess
 import sys
 
 from os import path
@@ -24,8 +28,7 @@ from os import path
 log = logging.getLogger(__name__)
 
 
-class Opener(object):
-
+def opener(pth, mode='r'):
     """Factory for creating file objects
 
     Keyword Arguments:
@@ -35,30 +38,19 @@ class Opener(object):
             the builtin open() function.
     """
 
-    def __init__(self, mode='r', bufsize=-1):
-        self._mode = mode
-        self._bufsize = bufsize
-
-    def __call__(self, string):
-        if string is sys.stdout or string is sys.stdin:
-            return string
-        elif string == '-':
-            return sys.stdin if 'r' in self._mode else sys.stdout
-        elif string.endswith('.bz2'):
-            return bz2.BZ2File(string, self._mode, self._bufsize)
-        elif string.endswith('.gz'):
-            return gzip.open(string, self._mode, self._bufsize)
+    def open_file(f):
+        if f is sys.stdout or f is sys.stdin:
+            return f
+        elif f == '-':
+            return sys.stdin if 'r' in mode else sys.stdout
+        elif f.endswith('.bz2'):
+            return bz2.BZ2File(f, mode)
+        elif f.endswith('.gz'):
+            return gzip.open(f, mode)
         else:
-            return open(string, self._mode, self._bufsize)
+            return open(f, mode)
 
-    def __repr__(self):
-        args = self._mode, self._bufsize
-        args_str = ', '.join(repr(arg) for arg in args if arg != -1)
-        return '{}({})'.format(type(self).__name__, args_str)
-
-
-def opener(pth, mode='r', bufsize=-1):
-    return Opener(mode, bufsize)(pth)
+    return open_file
 
 
 def read_csv(filename, compression=None, **kwargs):
@@ -71,3 +63,35 @@ def read_csv(filename, compression=None, **kwargs):
     kwargs['compression'] = compression
 
     return pandas.read_csv(filename, **kwargs)
+
+
+def version():
+    """
+    Depending on if git exists and at what version we can try these commands
+    to get the git version from the git tags.  If all else return the install
+    version or 0.0.0
+    """
+
+    install_dir = os.path.dirname(__file__)
+    git_cmds = (['git', '-C', install_dir, 'describe', '--tags'],  # >= 1.8.5
+                ['git', 'describe', '--tags'])  # < 1.8.5
+    devnull = open(os.devnull, 'w')
+
+    for cmd in git_cmds:
+        try:
+            logging.info(' '.join(cmd))
+            git_ver = subprocess.check_output(cmd, stderr=devnull)
+            tag_ver = re.search('v([\d.]*-[\d.]*)(-.*)?', git_ver).group(1)
+            return '.dev'.join(tag_ver.split('-'))
+        except Exception as e:
+            logging.warn(e)
+
+    try:
+        """
+        return version that was installed if available
+        """
+        return pkg_resources.require("csvpandas")[0].version
+    except pkg_resources.DistributionNotFound as e:
+        logging.warn(e)
+
+    return '0.0.0'
