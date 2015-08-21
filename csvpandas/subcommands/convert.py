@@ -36,7 +36,7 @@ def build_parser(parser):
     # common outputs
     parser.add_argument(
         '-o', '--out', metavar='FILE',
-        default=sys.stdout, type=utils.Opener('w'),
+        default=sys.stdout, type=utils.opener('w'),
         help="out delimited file")
 
     parser.add_argument(

@@ -35,13 +35,13 @@ def build_parser(parser):
     # common outputs
     parser.add_argument(
         '-o', '--out', metavar='FILE',
-        default=sys.stdout, type=utils.Opener('w'),
+        default=sys.stdout, type=utils.opener('w'),
         help="Classification results.")
 
     parser.add_argument(
         '--limit', type=int, help='Limit number of rows read from each csv.')
     parser.add_argument(
-        '--column',
+        '--columns',
         metavar='COLS',
         help=('Comma delimited list of column '
               'names or indices if --no-header'))
@@ -68,5 +68,5 @@ def action(args):
 
     df = pandas.concat(df, ignore_index=True)
 
-    columns = args.column.split(',')
+    columns = args.columns.split(',')
     df[columns].to_csv(args.out, index=False)
