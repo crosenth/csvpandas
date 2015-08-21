@@ -11,6 +11,13 @@ authors
 
 * Chris Rosenthal
 
+notes
+=====
+
+This is strictly an experimental package and potentially full of bugs.  I am still in the process of planning and 
+writing up specifications.  The motivation is to take advantage of Python Pandas high performance libraries for 
+manipulating csv files on a file system.
+
 dependencies
 ============
 
@@ -40,18 +47,6 @@ typically out of date). Fortunately, these can pretty easily be
 installed on Ubuntu 12.04 by running::
 
   % sudo apt-get build-dep python-numpy python-pandas
-
-versions
-========
-
-We use abbrevited git sha hashes to identify the software version::
-
-  % ./csvpandas --version
-  0.0.1
-
-The version information is saved in ``csvpandas/data`` when ``setup.py``
-is run (on installation, or even by executing ``python setup.py
--h``).
 
 unit tests
 ==========
