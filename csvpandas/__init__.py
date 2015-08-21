@@ -31,8 +31,6 @@ log = logging.getLogger(__name__)
 
 _data = os.path.join(os.path.dirname(__file__), 'data')
 
-__version__ = utils.version()
-
 
 def main(argv=sys.argv[1:]):
     # add_help after logging is setup or parse_known_args will exit on -h
@@ -45,6 +43,9 @@ def main(argv=sys.argv[1:]):
     namespace, argv = parser.parse_known_args(argv)
 
     setup_logging(namespace)
+
+    # parse version after logging has been configured
+    parse_version(parser)
 
     # add_help=True
     parser.add_argument('-h', '--help', action='help')
@@ -86,12 +87,14 @@ def setup_logging(namespace):
     logging.basicConfig(stream=namespace.log, format=logformat, level=loglevel)
 
 
-def parse_args(parser):
+def parse_version(parser):
     parser.add_argument('-V', '--version',
                         action='version',
-                        version=__version__,
+                        version=utils.version(),
                         help='Print the version number and exit')
 
+
+def parse_args(parser):
     parser.add_argument('-l', '--log',
                         metavar='FILE',
                         default=sys.stdout,
