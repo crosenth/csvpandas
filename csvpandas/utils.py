@@ -25,8 +25,6 @@ import sys
 
 from os import path
 
-log = logging.getLogger(__name__)
-
 
 def opener(pth, mode='r'):
     """Factory for creating file objects
@@ -79,12 +77,18 @@ def version():
 
     for cmd in git_cmds:
         try:
-            logging.info(' '.join(cmd))
+            logging.debug(' '.join(cmd))
             git_ver = subprocess.check_output(cmd, stderr=devnull)
-            tag_ver = re.search('v([\d.]*-[\d.]*)(-.*)?', git_ver).group(1)
-            return '.dev'.join(tag_ver.split('-'))
+            tag_re = '(?P<tag>[\d.]*)'
+            commit_re = '(?P<commit>[\d.]*)'
+            git_re = 'v{}-?{}-?.*'.format(tag_re, commit_re)
+            git_search = re.search(git_re, git_ver)
+            if git_search.group('commit') == '':
+                return git_search.group('tag')
+            else:
+                return '{tag}.dev{commit} '.format(**git_search.groupdict())
         except Exception as e:
-            logging.warn(e)
+            logging.warn('{} {}'.format(type(e), e.message))
 
     try:
         """
