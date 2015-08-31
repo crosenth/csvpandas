@@ -23,9 +23,10 @@ import importlib
 import logging
 import os
 import pkgutil
-import utils
 import subcommands
 import sys
+import utils
+import version
 
 log = logging.getLogger(__name__)
 
@@ -90,7 +91,7 @@ def setup_logging(namespace):
 def parse_version(parser):
     parser.add_argument('-V', '--version',
                         action='version',
-                        version=utils.version(),
+                        version=version.version(),
                         help='Print the version number and exit')
 
 
