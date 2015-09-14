@@ -26,7 +26,7 @@ import sys
 from os import path
 
 
-def opener(pth, mode='r'):
+def opener(mode='r'):
     """Factory for creating file objects
 
     Keyword Arguments:
