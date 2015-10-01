@@ -67,8 +67,8 @@ def action(args):
 
     df = pandas.concat(df, ignore_index=True)
 
-    if args.no_header:
-        df.columns = ['column{}'.format(col) for col in df.columns]
+    header = df.columns
+    df.columns = ['column{}'.format(col) for col in xrange(len(df.columns))]
 
     # calculate column widths
     widths = {col: df[col].map(len).max() for col in df.columns}
@@ -87,8 +87,8 @@ def action(args):
     args.out.write(divider)
 
     if not args.no_header:
-        header = {col: col for col in df.columns}
-        args.out.write(row.format(**header))
+        header_dict = {col: header[i] for i, col in enumerate(df.columns)}
+        args.out.write(row.format(**header_dict))
         args.out.write(divider)
 
     df.apply(lambda x: args.out.write(row.format(**x)), axis=1)
