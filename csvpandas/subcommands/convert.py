@@ -73,7 +73,7 @@ def action(args):
 
     dfs = []
     for csv in args.csv:
-        df = utils.read_csv(
+        df = pandas.read_csv(
             csv,
             dtype=str,
             nrows=args.limit,

@@ -33,7 +33,8 @@ def build_parser(parser):
     # required inputs
     parser.add_argument(
         'csv',
-        nargs='+',
+        nargs='*',
+        default=[sys.stdin],
         help='CSV tabular blast file of query and subject hits.')
 
     # common outputs
@@ -57,7 +58,7 @@ def action(args):
 
     df = []
     for csv in args.csv:
-        df.append(utils.read_csv(
+        df.append(pandas.read_csv(
             csv,
             dtype=str,
             nrows=args.limit,
@@ -69,10 +70,13 @@ def action(args):
 
     header = df.columns
     df.columns = ['column{}'.format(col) for col in xrange(len(df.columns))]
+    header_dict = {col: header[i] for i, col in enumerate(df.columns)}
 
     # calculate column widths
     widths = {col: df[col].map(len).max() for col in df.columns}
-    widths = {col: max(len(str(col)), width) for col, width in widths.items()}
+    # check if header is longer
+    for col, width in widths.items():
+        widths[col] = max(len(str(header_dict[col])), width)
 
     # divider - add two spaces
     divider = '+'.join('-' * (widths[col] + 2) for col in df.columns)
@@ -87,7 +91,6 @@ def action(args):
     args.out.write(divider)
 
     if not args.no_header:
-        header_dict = {col: header[i] for i, col in enumerate(df.columns)}
         args.out.write(row.format(**header_dict))
         args.out.write(divider)
 

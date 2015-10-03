@@ -17,6 +17,7 @@
 """
 
 import logging
+import pandas
 import sys
 
 from csvpandas import utils
@@ -63,7 +64,7 @@ def action(args):
     dfs = []
 
     for csv in args.csv:
-        dfs.append(utils.read_csv(
+        dfs.append(pandas.read_csv(
             csv,
             dtype=str,
             comment=args.comment,

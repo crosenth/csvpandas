@@ -58,7 +58,7 @@ def action(args):
 
     df = []
     for csv in args.csv:
-        df.append(utils.read_csv(
+        df.append(pandas.read_csv(
             csv,
             dtype=str,
             nrows=args.limit,
