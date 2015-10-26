@@ -74,5 +74,5 @@ def action(args):
     df = pandas.concat(df, ignore_index=True)
 
     columns = args.columns.split(',') if args.columns else df.columns.tolist()
-    df = df.sort(columns=columns, ascending=args.ascending)
+    df = df.sort_values(by=columns, ascending=args.ascending)
     df.to_csv(args.out, index=False)
