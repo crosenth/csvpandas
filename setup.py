@@ -10,7 +10,7 @@ setup(author='Chris Rosenthal',
       entry_points={'console_scripts': {'csvpandas = csvpandas:main'}},
       version=version.version(),
       url='https://github.com/crosenth/csvpandas',
-      install_requires=['pandas>=0.18'],
+      install_requires=['pandas>=0.17'],
       license='GPLv3',
       classifiers=[
           'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
