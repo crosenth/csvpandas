@@ -29,13 +29,13 @@ log = logging.getLogger(__name__)
 def build_parser(parser):
     # required inputs
     parser.add_argument(
+        'pattern',
+        help=('search for pattern in column(s)'))
+
+    parser.add_argument(
         'csv',
         nargs='+',
         help='CSV tabular blast file of query and subject hits.')
-
-    parser.add_argument(
-        'pattern',
-        help=('search for pattern in column(s)'))
 
     # common outputs
     parser.add_argument(

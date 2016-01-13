@@ -2,6 +2,10 @@
  Changes for csvpandas
 =======================
 
+0.0.2-dev
+=========
+ * switching argument order of ``csvpandas grep`` from file pattern to pattern file
+
 0.0.2
 =========
  * new ``csvpandas sort`` for sorting
