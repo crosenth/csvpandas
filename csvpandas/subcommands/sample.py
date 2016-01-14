@@ -93,7 +93,7 @@ def action(args):
             frac=args.n, replace=args.replace, random_state=seed)
     else:
         sample = df.sample(
-            n=args.n, replace=args.replace, random_state=seed)
+            n=int(args.n), replace=args.replace, random_state=seed)
 
     sample.to_csv(args.out)
 
