@@ -19,6 +19,7 @@
 import logging
 import pandas
 import sys
+import time
 
 from csvpandas import utils
 
@@ -37,10 +38,12 @@ def build_parser(parser):
         help='CSV tabular blast file of query and subject hits.')
     parser.add_argument(
         '--seed-in',
-        help=('[not implemented]'))
+        type=utils.opener('r'),
+        help=('file containing integer to generate random seed'))
     parser.add_argument(
         '--seed-out',
-        help=('[not implemented]'))
+        type=utils.opener('w'),
+        help=('file containing integer used to generate seed'))
 
     # common outputs
     parser.add_argument(
@@ -80,12 +83,22 @@ def action(args):
 
     df = pandas.concat(df, ignore_index=True)
 
-    if args.n < 1:
-        sample = df.sample(frac=args.n, replace=args.replace)
+    if args.seed_in:
+        seed = int(args.seed_in.read().strip())
     else:
-        sample = df.sample(n=args.n, replace=args.replace)
+        seed = int(time.time())
+
+    if args.n < 1:
+        sample = df.sample(
+            frac=args.n, replace=args.replace, random_state=seed)
+    else:
+        sample = df.sample(
+            n=args.n, replace=args.replace, random_state=seed)
 
     sample.to_csv(args.out)
 
     if args.rest:
         df[~df.index.isin(sample.index)].to_csv(args.rest)
+
+    if args.seed_out:
+        args.seed_out.write(str(seed))
