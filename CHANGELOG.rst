@@ -2,7 +2,7 @@
  Changes for csvpandas
 =======================
 
-0.0.2-dev
+0.0.3
 =========
  * new ``csvpands sample`` for sampling rows in a csv file
  * switching argument order of ``csvpandas grep`` from file pattern to pattern file
