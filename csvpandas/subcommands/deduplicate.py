@@ -66,7 +66,7 @@ def action(args):
 
     df = []
     for csv in args.csv:
-        df.append(utils.read_csv(
+        df.append(pandas.read_csv(
             csv,
             dtype=str,
             nrows=args.limit,
@@ -86,6 +86,7 @@ def action(args):
             df = df.groupby(by=on, sort=False)
             df = df.tail(1) if args.take_last else df.head(1)
         else:
-            df = df.drop_duplicates(take_last=args.take_last)
+            keep = 'last' if args.take_last else 'first'
+            df = df.drop_duplicates(keep=keep)
 
     df.to_csv(args.out, index=False)
