@@ -49,6 +49,12 @@ def build_parser(parser):
         '--no-header',
         action='store_true',
         help='If no header available.')
+    parser.add_argument(
+        '--sep',
+        default=',',
+        help=('Delimiter to use. If sep is None, will try to '
+              'automatically determine this. Regular '
+              'expressions are accepted.'))
 
 
 def action(args):
@@ -60,6 +66,7 @@ def action(args):
     for csv in args.csv:
         df.append(pandas.read_csv(
             csv,
+            sep=args.sep.decode('string_escape'),
             dtype=str,
             nrows=args.limit,
             comment='#',
