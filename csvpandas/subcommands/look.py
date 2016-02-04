@@ -13,7 +13,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with csvpandas.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Deduplicate any number of csv file with optional column group indexing.
+"""Output csv file in a command line interface friendly way.
 
 FIXME: This might be better off as an extension of
 pandas.core.format.TableFormatter.  Going from a DataFrame to string using

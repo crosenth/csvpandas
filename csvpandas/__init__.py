@@ -52,7 +52,8 @@ def main(argv=sys.argv[1:]):
     parser.add_argument('-h', '--help', action='help')
 
     # setup actions and actions' arguments
-    parser, actions = parse_subcommands(parser, argv)
+    parser, actions, namespace, argv = parse_subcommands(
+        parser, argv=argv, namespace=namespace)
 
     # finish building namespace
     namespace = parser.parse_args(args=argv, namespace=namespace)
@@ -118,7 +119,7 @@ def parse_args(parser):
     return parser
 
 
-def parse_subcommands(parser, argv):
+def parse_subcommands(parser, argv=None, namespace=None):
     """
     Setup all sub-commands
     """
@@ -162,9 +163,10 @@ def parse_subcommands(parser, argv):
             formatter_class=argparse.RawDescriptionHelpFormatter)
 
         # see subcommands/__init__.py
-        subparser = subcommands.parse_args(subparser)
+#        namespace, argv = subcommands.parse_args(
+#            subparser, argv=argv, namespace=namespace)
 
         mod.build_parser(subparser)
         actions[name] = mod.action
 
-    return parser, actions
+    return parser, actions, namespace, argv
