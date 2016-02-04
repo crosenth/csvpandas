@@ -21,60 +21,16 @@ apply is a bit slow.
 """
 
 import logging
-import pandas
-import sys
-
-from csvpandas import utils
 
 log = logging.getLogger(__name__)
 
 
 def build_parser(parser):
-    # required inputs
-    parser.add_argument(
-        'csv',
-        nargs='*',
-        default=[sys.stdin],
-        help='CSV tabular blast file of query and subject hits.')
-
-    # common outputs
-    parser.add_argument(
-        '-o', '--out', metavar='FILE',
-        default=sys.stdout, type=utils.opener('w'),
-        help="Classification results.")
-
-    parser.add_argument(
-        '--limit', type=int, help='Limit number of rows read from each csv.')
-    parser.add_argument(
-        '--no-header',
-        action='store_true',
-        help='If no header available.')
-    parser.add_argument(
-        '--sep',
-        default=',',
-        help=('Delimiter to use. If sep is None, will try to '
-              'automatically determine this. Regular '
-              'expressions are accepted.'))
+    return parser
 
 
 def action(args):
-    # for debugging:
-    # pandas.set_option('display.max_columns', None)
-    # pd.set_option('display.max_rows', None)
-
-    df = []
-    for csv in args.csv:
-        df.append(pandas.read_csv(
-            csv,
-            sep=args.sep.decode('string_escape'),
-            dtype=str,
-            nrows=args.limit,
-            comment='#',
-            na_filter=False,
-            header=None if args.no_header else 0))
-
-    df = pandas.concat(df, ignore_index=True)
-
+    df = args.csv
     header = df.columns
     df.columns = ['column{}'.format(col) for col in xrange(len(df.columns))]
     header_dict = {col: header[i] for i, col in enumerate(df.columns)}

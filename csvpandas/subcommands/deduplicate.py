@@ -17,76 +17,33 @@
 """
 
 import logging
-import pandas
-import sys
-
-from csvpandas import utils
 
 log = logging.getLogger(__name__)
 
 
 def build_parser(parser):
-    # required inputs
-    parser.add_argument(
-        'csv',
-        nargs='+',
-        help='CSV tabular blast file of query and subject hits.')
-
-    # common outputs
-    parser.add_argument(
-        '-o', '--out', metavar='FILE',
-        default=sys.stdout, type=utils.opener('w'),
-        help="Classification results.")
-
-    parser.add_argument(
-        '--limit', type=int, help='Limit number of rows read from each csv.')
     parser.add_argument(
         '--on',
         metavar='COLS',
         help=('Comma delimited list of column '
               'names or indices if --no-header'))
     parser.add_argument(
-        '--no-header',
-        action='store_true',
-        help='If no header available.')
-    parser.add_argument(
         '--take-last',
         action='store_true',
         help='Take the last duplicate value. Default is first.')
-    parser.add_argument(
-        '--stack',
-        action='store_true',
-        help=('keep all lines, do not deduplicate'))
 
 
 def action(args):
-    # for debugging:
-    # pandas.set_option('display.max_columns', None)
-    # pd.set_option('display.max_rows', None)
+    if args.on:
+        on = args.on.split(',')
 
-    df = []
-    for csv in args.csv:
-        df.append(pandas.read_csv(
-            csv,
-            dtype=str,
-            nrows=args.limit,
-            comment='#',
-            na_filter=False,
-            header=None if args.no_header else 0))
+        if args.no_header:
+            on = map(int, on)
 
-    df = pandas.concat(df, ignore_index=True)
-
-    if not args.stack:
-        if args.on:
-            on = args.on.split(',')
-
-            if args.no_header:
-                on = map(int, on)
-
-            df = df.groupby(by=on, sort=False)
-            df = df.tail(1) if args.take_last else df.head(1)
-        else:
-            keep = 'last' if args.take_last else 'first'
-            df = df.drop_duplicates(keep=keep)
+        df = args.csv.groupby(by=on, sort=False)
+        df = df.tail(1) if args.take_last else df.head(1)
+    else:
+        keep = 'last' if args.take_last else 'first'
+        df = args.csv.drop_duplicates(keep=keep)
 
     df.to_csv(args.out, index=False)

@@ -17,8 +17,6 @@
 """
 
 import logging
-import pandas
-import sys
 import time
 
 from csvpandas import utils
@@ -33,10 +31,6 @@ def build_parser(parser):
         type=float,
         help='number of rows to sample.  Can be a decimal fraction.')
     parser.add_argument(
-        'csv',
-        nargs='+',
-        help='CSV tabular blast file of query and subject hits.')
-    parser.add_argument(
         '--seed-in',
         type=utils.opener('r'),
         help=('file containing integer to generate random seed'))
@@ -45,11 +39,6 @@ def build_parser(parser):
         type=utils.opener('w'),
         help=('file containing integer used to generate seed'))
 
-    # common outputs
-    parser.add_argument(
-        '-o', '--out', metavar='FILE',
-        default=sys.stdout, type=utils.opener('w'),
-        help="Classification results.")
     parser.add_argument(
         '--rest',
         help='file to output rows not included in sample.')
@@ -58,35 +47,15 @@ def build_parser(parser):
         '--replace',
         action='store_true',
         help=('Sample with or without replacement.'))
-    parser.add_argument(
-        '--limit', type=int, help='Limit number of rows read from each csv.')
-    parser.add_argument(
-        '--no-header',
-        action='store_true',
-        help='If no header available.')
 
 
 def action(args):
-    # for debugging:
-    # pandas.set_option('display.max_columns', None)
-    # pd.set_option('display.max_rows', None)
-
-    df = []
-    for csv in args.csv:
-        df.append(pandas.read_csv(
-            csv,
-            dtype=str,
-            nrows=args.limit,
-            comment='#',
-            na_filter=False,
-            header=None if args.no_header else 0))
-
-    df = pandas.concat(df, ignore_index=True)
-
     if args.seed_in:
         seed = int(args.seed_in.read().strip())
     else:
         seed = int(time.time())
+
+    df = args.csv
 
     if args.n < 1:
         sample = df.sample(

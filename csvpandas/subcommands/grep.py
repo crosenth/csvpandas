@@ -17,11 +17,7 @@
 """
 
 import logging
-import pandas
 import re
-import sys
-
-from csvpandas import utils
 
 log = logging.getLogger(__name__)
 
@@ -32,19 +28,6 @@ def build_parser(parser):
         'pattern',
         help=('search for pattern in column(s)'))
 
-    parser.add_argument(
-        'csv',
-        nargs='+',
-        help='CSV tabular blast file of query and subject hits.')
-
-    # common outputs
-    parser.add_argument(
-        '-o', '--out', metavar='FILE',
-        default=sys.stdout, type=utils.opener('w'),
-        help="Classification results.")
-
-    parser.add_argument(
-        '--limit', type=int, help='Limit number of rows read from each csv.')
     parser.add_argument(
         '--columns',
         metavar='COLS',
@@ -60,37 +43,23 @@ def build_parser(parser):
         action='store_true',
         help=('Ignore case distinctions in both '
               'the PATTERN and the input files.'))
-    parser.add_argument(
-        '--no-header',
-        action='store_true',
-        help='If no header available.')
 
 
 def action(args):
-    # for debugging:
-    # pandas.set_option('display.max_columns', None)
-    # pd.set_option('display.max_rows', None)
-
-    df = []
-    for csv in args.csv:
-        df.append(pandas.read_csv(
-            csv,
-            dtype=str,
-            nrows=args.limit,
-            comment='#',
-            na_filter=False,
-            header=None if args.no_header else 0))
-
-    df = pandas.concat(df, ignore_index=True)
-
-    columns = args.columns.split(',') if args.columns else df.columns.tolist()
+    if args.columns:
+        columns = args.columns.split(',')
+    else:
+        columns = args.csv.columns.tolist()
 
     if args.ignore_case:
         pattern = re.compile(args.pattern, re.IGNORECASE)
     else:
         pattern = re.compile(args.pattern)
 
-    search = lambda x: bool(re.search(pattern, x))
+    def search(string):
+        return bool(re.search(pattern, string))
+
+    df = args.csv
 
     if args.all:
         df = df[df[columns].apply(lambda x: x.map(search).all(), axis=1)]
