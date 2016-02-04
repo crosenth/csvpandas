@@ -163,10 +163,11 @@ def parse_subcommands(parser, subcommands, argv):
             description=mod.__doc__,
             formatter_class=argparse.RawDescriptionHelpFormatter)
 
+        mod.build_parser(subparser)
+
         # see global subcommands/__init__.py
         subcommands.build_parser(subparser)
 
-        mod.build_parser(subparser)
         actions[name] = mod.action
 
     return parser, actions
