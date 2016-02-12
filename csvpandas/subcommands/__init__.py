@@ -41,17 +41,20 @@ def action(args):
     # pandas.set_option('display.max_columns', None)
     # pd.set_option('display.max_rows', None)
 
-    df = []
+    dfs = []
     for csv in args.csv:
-        df.append(pandas.read_csv(
-            csv,
-            sep=args.sep.decode('string_escape'),
-            dtype=str,
-            nrows=args.limit,
-            comment='#',
-            na_filter=False,
-            header=None if args.no_header else 0))
-
-    args.csv = pandas.concat(df, ignore_index=True)
-
+        try:
+            df = pandas.read_csv(
+                    csv,
+                    sep=args.sep.decode('string_escape'),
+                    dtype=str,
+                    nrows=args.limit,
+                    comment='#',
+                    na_filter=False,
+                    header=None if args.no_header else 0)
+        except StandardError as err:
+            log.error(err)
+            df = pandas.DataFrame()
+        dfs.append(df)
+    args.csv = pandas.concat(dfs, ignore_index=True)
     return args

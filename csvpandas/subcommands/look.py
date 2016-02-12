@@ -31,6 +31,10 @@ def build_parser(parser):
 
 def action(args):
     df = args.csv
+
+    if df.empty:
+        return
+
     header = df.columns
     df.columns = ['column{}'.format(col) for col in xrange(len(df.columns))]
     header_dict = {col: header[i] for i, col in enumerate(df.columns)}
