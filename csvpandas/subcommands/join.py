@@ -18,9 +18,6 @@
 
 import logging
 import pandas
-import sys
-
-from csvpandas import utils
 
 log = logging.getLogger(__name__)
 
@@ -28,16 +25,10 @@ log = logging.getLogger(__name__)
 def build_parser(parser):
     # required inputs
     parser.add_argument(
-        'csv',
-        metavar='CSVs',
-        nargs='+',
+        '--other',
+        required=True,
+        action='append',
         help='tabulated input file')
-
-    # common outputs
-    parser.add_argument(
-        '-o', '--out', metavar='FILE',
-        default=sys.stdout, type=utils.opener('w'),
-        help="out delimited file")
 
     parser.add_argument(
         '--how',
@@ -50,25 +41,17 @@ def build_parser(parser):
     parser.add_argument(
         '--comment', metavar='CHAR',
         help=('comment character'))
-    parser.add_argument(
-        '--no-header',
-        action='store_true',
-        help='if first line is data')
 
 
 def action(args):
-    # for debugging:
-    # pandas.set_option('display.max_columns', None)
-    # pd.set_option('display.max_rows', None)
-
-    dfs = []
-
-    for csv in args.csv:
-        dfs.append(pandas.read_csv(
-            csv,
+    others = []
+    for other in args.other:
+        others.append(pandas.read_csv(
+            other,
             dtype=str,
             comment=args.comment,
             na_filter=False,
+            sep=args.sep,
             header=None if args.no_header else 0))
 
     if args.on:
@@ -79,8 +62,7 @@ def action(args):
     else:
         on = None
 
-    df = dfs.pop(0)
-    for d in dfs:
-        df = df.merge(d, how=args.how, on=on)
+    for other in others:
+        args.csv = args.csv.merge(other, how=args.how, on=on)
 
-    df.to_csv(args.out, header=not args.no_header, index=False)
+    args.csv.to_csv(args.out, header=not args.no_header, index=False)
