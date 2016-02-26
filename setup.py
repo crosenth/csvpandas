@@ -1,4 +1,4 @@
-import version
+import csvpandas
 
 from setuptools import setup, find_packages
 
@@ -8,7 +8,7 @@ setup(author='Chris Rosenthal',
       name='csvpandas',
       packages=find_packages(exclude=['tests']),
       entry_points={'console_scripts': {'csvpandas = csvpandas:main'}},
-      version=version.version(),
+      version=csvpandas.version.version(),
       url='https://github.com/crosenth/csvpandas',
       install_requires=['pandas>=0.17'],
       license='GPLv3',
