@@ -83,9 +83,9 @@ def setup_logging(namespace):
     }.get(namespace.verbosity, logging.DEBUG)
 
     if namespace.verbosity > 1:
-        logformat = '%(levelname)s %(module)s %(lineno)s %(message)s'
+        logformat = '%(levelname)s csvpandas %(lineno)s %(message)s'
     else:
-        logformat = '%(message)s'
+        logformat = 'csvpandas %(message)s'
 
     logging.basicConfig(stream=namespace.log, format=logformat, level=loglevel)
 

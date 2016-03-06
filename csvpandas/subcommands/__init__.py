@@ -15,7 +15,8 @@ def build_parser(parser):
         help='CSV tabular blast file of query and subject hits.')
 
     parser.add_argument(
-        '--limit', type=int, help='Limit number of rows read from each csv.')
+        '--limit',
+        type=int, help='Limit number of rows read from each csv.')
     parser.add_argument(
         '--no-header',
         action='store_true',
@@ -29,8 +30,10 @@ def build_parser(parser):
 
     # common outputs
     parser.add_argument(
-        '-o', '--out', metavar='FILE',
-        default=sys.stdout, type=csvpandas.utils.opener('w'),
+        '-o', '--out',
+        metavar='FILE',
+        default=sys.stdout,
+        type=csvpandas.utils.opener('w'),
         help="Classification results.")
 
     return parser
@@ -52,8 +55,8 @@ def action(args):
                     comment='#',
                     na_filter=False,
                     header=None if args.no_header else 0)
-        except StandardError as err:
-            log.error(err)
+        except Exception as err:
+            log.error(str(err).replace('\n', ''))
             df = pandas.DataFrame()
         dfs.append(df)
     args.csv = pandas.concat(dfs, ignore_index=True)
