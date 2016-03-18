@@ -1,6 +1,7 @@
 # global
 import csvpandas
 import logging
+import os
 import pandas
 import sys
 
@@ -45,16 +46,23 @@ def action(args):
     # pd.set_option('display.max_rows', None)
 
     dfs = []
+    xls_ext = ['.xls', '.xlsx']
     for csv in args.csv:
         try:
-            df = pandas.read_csv(
+            if csv is not sys.stdin and os.path.splitext(csv)[-1] in xls_ext:
+                df = pandas.read_excel(
                     csv,
-                    sep=args.sep.decode('string_escape'),
-                    dtype=str,
-                    nrows=args.limit,
-                    comment='#',
-                    na_filter=False,
                     header=None if args.no_header else 0)
+                df = df.fillna('').astype(str)
+            else:
+                df = pandas.read_csv(
+                        csv,
+                        sep=args.sep.decode('string_escape'),
+                        dtype=str,
+                        nrows=args.limit,
+                        comment='#',
+                        na_filter=False,
+                        header=None if args.no_header else 0)
         except Exception as err:
             log.error(str(err).replace('\n', ''))
             df = pandas.DataFrame()
