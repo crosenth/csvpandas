@@ -36,6 +36,11 @@ def action(args):
         return
 
     header = df.columns
+
+    # remove this 'Unnamed: #' default columns header if it exists
+    header = list(map(
+        lambda x: '' if x.startswith('Unnamed: ') else x, header))
+
     df.columns = ['column{}'.format(col) for col in xrange(len(df.columns))]
     header_dict = {col: header[i] for i, col in enumerate(df.columns)}
 
