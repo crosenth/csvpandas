@@ -13,7 +13,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with csvpandas.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Deduplicate any number of csv file with optional column group indexing.
+"""Filter and truncate CSV files. Like the Unix "cut" command, but for tabular data.
 """
 
 import logging
