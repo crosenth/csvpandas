@@ -57,7 +57,7 @@ def version():
                 version = '{tag}.dev{commit}'.format(**git_search.groupdict())
             break
         except Exception as e:
-            logging.warn('{} {}'.format(type(e), e.message))
+            logging.debug('{} {}'.format(type(e), e.message))
 
     if version is None:
         try:
