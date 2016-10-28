@@ -23,7 +23,6 @@ import importlib
 import logging
 import os
 import pkgutil
-import subcommands
 import sys
 import utils
 import version
@@ -52,6 +51,7 @@ def main(argv=sys.argv[1:]):
     parser.add_argument('-h', '--help', action='help')
 
     # setup actions and actions' arguments
+    import subcommands
     parser, actions = parse_subcommands(parser, subcommands, argv)
 
     # finish building namespace
