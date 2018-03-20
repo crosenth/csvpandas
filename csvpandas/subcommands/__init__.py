@@ -57,7 +57,7 @@ def action(args):
             else:
                 df = pandas.read_csv(
                         csv,
-                        sep=args.sep.decode('string_escape'),
+                        sep=bytes(args.sep, "utf-8").decode('unicode_escape'),
                         dtype=str,
                         nrows=args.limit,
                         comment='#',

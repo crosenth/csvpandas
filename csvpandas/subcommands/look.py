@@ -41,7 +41,7 @@ def action(args):
     header = list(map(
         lambda x: '' if x.startswith('Unnamed: ') else x, header))
 
-    df.columns = ['column{}'.format(col) for col in xrange(len(df.columns))]
+    df.columns = ['column{}'.format(col) for col in range(len(df.columns))]
     header_dict = {col: header[i] for i, col in enumerate(df.columns)}
 
     # calculate column widths

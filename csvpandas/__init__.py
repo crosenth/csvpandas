@@ -19,13 +19,14 @@ Assembles subcommands and provides top-level script.
 """
 
 import argparse
+from csvpandas import utils
 import importlib
 import logging
 import os
+import pkg_resources
 import pkgutil
+from . import subcommands
 import sys
-import utils
-import version
 
 log = logging.getLogger(__name__)
 
@@ -51,7 +52,6 @@ def main(argv=sys.argv[1:]):
     parser.add_argument('-h', '--help', action='help')
 
     # setup actions and actions' arguments
-    import subcommands
     parser, actions = parse_subcommands(parser, subcommands, argv)
 
     # finish building namespace
@@ -91,31 +91,35 @@ def setup_logging(namespace):
 
 
 def parse_version(parser):
-    parser.add_argument('-V', '--version',
-                        action='version',
-                        version=version.version(),
-                        help='Print the version number and exit')
+    parser.add_argument(
+        '-V', '--version',
+        action='version',
+        version=pkg_resources.get_distribution('csvpandas').version,
+        help='Print the version number and exit')
 
 
 def parse_args(parser):
-    parser.add_argument('-l', '--log',
-                        metavar='FILE',
-                        default=sys.stdout,
-                        type=utils.opener('a'),  # append
-                        help='Send logging to a file')
+    parser.add_argument(
+        '-l', '--log',
+        metavar='FILE',
+        default=sys.stdout,
+        type=utils.opener('a'),  # append
+        help='Send logging to a file')
 
-    parser.add_argument('-v', '--verbose',
-                        action='count',
-                        dest='verbosity',
-                        default=1,
-                        help='Increase verbosity of screen output '
-                             '(eg, -v is verbose, -vv more so)')
+    parser.add_argument(
+        '-v', '--verbose',
+        action='count',
+        dest='verbosity',
+        default=1,
+        help='Increase verbosity of screen output '
+             '(eg, -v is verbose, -vv more so)')
 
-    parser.add_argument('-q', '--quiet',
-                        action='store_const',
-                        dest='verbosity',
-                        const=0,
-                        help='Suppress output')
+    parser.add_argument(
+        '-q', '--quiet',
+        action='store_const',
+        dest='verbosity',
+        const=0,
+        help='Suppress output')
 
     return parser
 
@@ -153,7 +157,7 @@ def parse_subcommands(parser, subcommands, argv):
         try:
             imp = '{}.{}'.format(subcommands.__name__, name)
             mod = importlib.import_module(imp)
-        except Exception, e:
+        except Exception as e:
             log.error(e)
             continue
 
