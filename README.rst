@@ -2,7 +2,7 @@
 csvpandas: A command line csv toolkit wrapping the Pandas library
 =================================================================
 
-csvpandas - A wrapper of the Pandas high performance data analysis library to view and manipulate csv files 
+csvpandas - A wrapper of the Pandas high performance data analysis library to view and manipulate csv files
 
 .. contents:: Table of Contents
 
